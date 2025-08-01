@@ -1,0 +1,176 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>For you, GIRL!</title>
+  <link rel="icon" type="image/png" href="images/unnamed.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter&family=Roboto&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Lora', sans-serif;
+    }
+    .message-text {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      min-height: 6rem;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      color: #4B5563; 
+      text-align: justify;
+    }
+    .italic-text {
+      font-style: italic;
+      color: #6B7280; 
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-700 min-h-screen flex flex-col">
+  <header class="border-b border-gray-200">
+    <nav class="max-w-5xl mx-auto flex justify-center items-center py-4 px-4 sm:px-6 lg:px-8">
+      <div class="text-sm italic text-gray-900 select-none font-semibold">Hello, Change me!</div>
+    </nav>
+  </header>
+
+  <main class="flex-grow flex flex-col items-center justify-center px-4 text-center max-w-3xl mx-auto mt-20 sm:mt-32">
+    <img src="images/1101.gif" alt="Banner" style="width: 600; height: 288; margin-bottom: 20px;" />
+    <h1 class="text-2xl sm:text-3xl italic text-gray-900 mb-2 font-semibold">I'm still standing here, waiting for u :3</h1>
+    <p class="text-gray-600 text-sm sm:text-base max-w-md leading-relaxed mb-6">
+      When words fall short, let my message whisper all the love, the thankfulness, and the silent longing my heart holds for you.
+    </p>
+
+    <article
+      class="border border-gray-200 rounded-xl p-6 max-w-xl text-left shadow-sm"
+      aria-label="Apology message card"
+    >
+      <p id="typing" class="message-text mb-4"></p>
+      <footer class="flex justify-between text-xs text-gray-400 italic">
+        <span id="author" class="italic-text">Kevin</span>
+        <time id="time" datetime="2025-07-25T19:12:00">Fri 25 Jul 2025, 07:12 pm</time>
+      </footer>
+    </article>
+
+    <div class="mt-8 flex space-x-4">
+      <button
+        id="backBtn"
+        class="bg-gray-900 text-white text-xs font-semibold px-6 py-2 rounded shadow hover:bg-gray-800 transition"
+        type="button"
+      >
+        Back
+      </button>
+      <button
+        id="nextBtn"
+        class="bg-gray-900 text-white text-xs font-semibold px-6 py-2 rounded shadow hover:bg-gray-800 transition"
+        type="button"
+      >
+        Next
+      </button>
+    </div>
+  </main>
+
+  <audio id="bgMusic" src="music/aboutyou.mp3" autoplay loop></audio>
+
+  <script>
+    const messages = [
+      {
+        text: "Change me!",
+        author: "Kevin",
+        datetime: "2025-07-25T19:12:00",
+        displayTime: "Fri 25 Jul 2025, 07:12 pm"
+      },
+      {
+        text: "Change me!",
+        author: "Kevin",
+        datetime: "2025-07-26T10:00:00",
+        displayTime: "Sat 26 Jul 2025, 10:00 am"
+      },
+      {
+        text: "This script was made by Kevin, as github (@incr3d1ble).",
+        author: "Kevin",
+        datetime: "2025-07-27T08:30:00",
+        displayTime: "Sun 27 Jul 2025, 08:30 am"
+      },
+      {
+        text: "Change me!",
+        author: "Kevin",
+        datetime: "2025-07-27T08:30:00",
+        displayTime: "Sun 27 Jul 2025, 09:50 am"
+      },
+      {
+        text: "Change me!",
+        author: "Kevin",
+        datetime: "2025-07-27T08:30:00",
+        displayTime: "Sun 27 Jul 2025, 11:55 am"
+      },
+      {
+        text: "Change me!",
+        author: "Kevin",
+        datetime: "2025-07-27T08:30:00",
+        displayTime: "Sun 27 Jul 2025, 15:00 pm"
+      }
+    ];
+
+    const typingElement = document.getElementById('typing');
+    const authorElement = document.getElementById('author');
+    const timeElement = document.getElementById('time');
+    const nextBtn = document.getElementById('nextBtn');
+    const backBtn = document.getElementById('backBtn');
+    const bgMusic = document.getElementById('bgMusic');
+    
+    let currentMessageIndex = 0;
+    let typingTimeout;
+    
+    function clearTyping() {
+      clearTimeout(typingTimeout);
+      typingElement.innerHTML = '';
+    }
+    
+    function typeText(text, i = 0) {
+      if (i < text.length) {
+        typingElement.innerHTML += text.charAt(i);
+        typingTimeout = setTimeout(() => typeText(text, i + 1), 40);
+      }
+    }
+    
+    function showMessage(index) {
+      clearTyping();
+      authorElement.textContent = messages[index].author;
+      timeElement.setAttribute('datetime', messages[index].datetime);
+      timeElement.textContent = messages[index].displayTime;
+      typeText(messages[index].text);
+    
+      backBtn.style.display = index === 0 ? 'none' : 'block';
+      nextBtn.style.display = index === messages.length - 1 ? 'none' : 'block';
+    }
+    
+    nextBtn.addEventListener('click', () => {
+      currentMessageIndex++;
+      if (currentMessageIndex >= messages.length) {
+        currentMessageIndex = messages.length - 1;
+      }
+      showMessage(currentMessageIndex);
+    });
+    
+    backBtn.addEventListener('click', () => {
+      currentMessageIndex--;
+      if (currentMessageIndex < 0) {
+        currentMessageIndex = 0; 
+      }
+      showMessage(currentMessageIndex);
+    });
+    
+    function tryPlayMusic() {
+      bgMusic.play().catch(() => {});
+      document.removeEventListener('click', tryPlayMusic);
+      document.removeEventListener('keydown', tryPlayMusic);
+    }
+    document.addEventListener('click', tryPlayMusic);
+    document.addEventListener('keydown', tryPlayMusic);
+    
+    showMessage(currentMessageIndex);
+  </script>
+</body>
+</html>
